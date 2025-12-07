@@ -1,0 +1,8 @@
+
+From: security-alert@bank.com
+To: user@example.com
+Subject: Action Required
+Date: 2024-05-20
+
+Dear Customer, we noticed a login from IP 192.168.1.1. 
+Please verify this activity immediately.
