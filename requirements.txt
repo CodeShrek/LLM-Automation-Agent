@@ -15,3 +15,5 @@ beautifulsoup4
 pillow
 requests
 pytest
+streamlit
+mdformat

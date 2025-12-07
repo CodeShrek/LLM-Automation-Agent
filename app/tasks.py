@@ -6,6 +6,7 @@ import datetime
 import glob
 import logging
 import numpy as np
+import mdformat  # <--- NEW: Import mdformat
 from dateutil import parser
 from app.utils import secure_path
 from app.services.llm_service import llm_client
@@ -26,18 +27,27 @@ async def install_uv_datagen(user_email: str = "test@example.com"):
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"Script execution failed: {e}")
 
-# --- A2. Format Markdown ---
+# --- A2. Format Markdown (UPDATED: Pure Python) ---
 async def format_markdown(file_path: str):
     path = secure_path(file_path)
     if not path.exists():
         raise FileNotFoundError(f"File {file_path} does not exist.")
     
-    # Using npx prettier
     try:
-        subprocess.run(["npx", "prettier@3.4.2", "--write", str(path)], check=True)
+        # Read content
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        # Format using Python library (No Node.js needed!)
+        formatted = mdformat.text(content)
+        
+        # Write back
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(formatted)
+            
         return f"Formatted {file_path} successfully."
-    except subprocess.CalledProcessError:
-        raise RuntimeError("Prettier formatting failed. Is Node.js installed?")
+    except Exception as e:
+        raise RuntimeError(f"Formatting failed: {e}")
 
 # --- A3. Count Weekdays ---
 async def count_weekdays(file_path: str, target_weekday_name: str, output_file: str):
@@ -74,7 +84,7 @@ async def sort_json(file_path: str, sort_keys: list, output_file: str):
     with open(input_path, 'r') as f:
         data = json.load(f)
     
-    # Sort data. Handling missing keys by providing an empty string.
+    # Sort data
     data.sort(key=lambda x: tuple(x.get(k, "") for k in sort_keys))
     
     with open(output_path, 'w') as f:
@@ -86,7 +96,6 @@ async def extract_recent_logs(logs_dir: str, output_file: str, count: int = 10):
     logs_path = secure_path(logs_dir)
     output_path = secure_path(output_file)
     
-    # Get all log files and sort by modification time (descending)
     log_files = sorted(glob.glob(str(logs_path / "*.log")), key=os.path.getmtime, reverse=True)
     recent_files = log_files[:count]
     
@@ -106,12 +115,10 @@ async def create_index(docs_dir: str, output_file: str):
     output_path = secure_path(output_file)
     
     index = {}
-    # Recursive search for markdown files
     for md_file in docs_path.glob("**/*.md"):
         with open(md_file, 'r') as f:
             for line in f:
                 if line.startswith("# "):
-                    # Get relative path without /data prefix for cleanliness
                     rel_path = str(md_file.relative_to(docs_path))
                     index[rel_path] = line.strip("# ").strip()
                     break
@@ -128,7 +135,6 @@ async def extract_email_sender(file_path: str, output_file: str):
     with open(input_path, 'r') as f:
         content = f.read()
     
-    # Use LLM for robust extraction
     prompt = f"Extract the sender's email address from this text. Return ONLY the email address.\n\nTEXT:\n{content}"
     result = await llm_client.model.generate_content_async(prompt)
     email = result.text.strip()
@@ -165,7 +171,6 @@ async def find_similar_comments(file_path: str, output_file: str):
 
     embeddings = [await llm_client.get_embedding(c) for c in comments]
     
-    # Calculate Similarity using dot product
     max_sim = -1
     best_pair = ("", "")
     
@@ -182,7 +187,6 @@ async def find_similar_comments(file_path: str, output_file: str):
 
 # --- A10. Query Database ---
 async def query_database(db_path: str, query: str, output_file: str):
-    # Support SQLite and DuckDB
     db_full_path = secure_path(db_path)
     output_path = secure_path(output_file)
     
@@ -192,7 +196,6 @@ async def query_database(db_path: str, query: str, output_file: str):
         cursor.execute(query)
         result = cursor.fetchall()
         
-        # Write results
         with open(output_path, 'w') as f:
             if len(result) == 1 and len(result[0]) == 1:
                 f.write(str(result[0][0]))
