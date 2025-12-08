@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     
     GEMINI_API_KEY: str
     API_SECRET_KEY: str = "default-insecure-key"
-    GEMINI_MODEL: str = "gemini-1.5-flash"
+    GEMINI_MODEL: str = "gemini-1.5-flash-latest"
 
     def ensure_dirs(self):
         self.DATA_DIR.mkdir(parents=True, exist_ok=True)
