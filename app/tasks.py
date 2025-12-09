@@ -12,6 +12,7 @@ from app.utils import secure_path
 from app.services.llm_service import llm_client
 
 # --- A1. Install UV and Run Datagen ---
+
 async def install_uv_datagen(user_email: str = "test@example.com"):
     try:
         # 1. Install uv
@@ -21,11 +22,45 @@ async def install_uv_datagen(user_email: str = "test@example.com"):
         url = "https://raw.githubusercontent.com/sanand0/tools-in-data-science-public/tds-2025-01/project-1/datagen.py"
         subprocess.run(["curl", "-o", "datagen.py", url], check=True)
         
-        # 3. Run datagen.py
-        subprocess.run(["python", "datagen.py", user_email], check=True)
+        # 3. AUTO-FIX: Patch datagen.py for macOS (Paths & Fonts)
+        print("Patching datagen.py for macOS environment...")
+        with open("datagen.py", "r") as f:
+            content = f.read()
+        
+        # Fix 1: Replace forbidden '/data' with local 'data'
+        if '/data' in content:
+            content = content.replace('"/data"', '"data"')
+            
+        # Fix 2: Replace Linux/Windows fonts with a standard macOS font
+        # We replace the specific fallback font the script uses
+        if '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf' in content:
+            content = content.replace(
+                '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 
+                '/System/Library/Fonts/Helvetica.ttc'
+            )
+        
+        # Fix 3: Also patch "arial.ttf" just in case, pointing to a valid Mac system font
+        if '"arial.ttf"' in content:
+            content = content.replace('"arial.ttf"', '"/System/Library/Fonts/Helvetica.ttc"')
+
+        # Write the patched content back
+        with open("datagen.py", "w") as f:
+            f.write(content)
+        
+        # 4. Run the fixed script
+        result = subprocess.run(
+            ["uv", "run", "datagen.py", user_email],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            raise RuntimeError(f"Script Error: {result.stderr}")
+            
         return "UV installed and Data Generation completed."
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Script execution failed: {e}")
+        raise RuntimeError(f"Process failed: {e}")
+          
 
 # --- A2. Format Markdown (UPDATED: Pure Python) ---
 async def format_markdown(file_path: str):

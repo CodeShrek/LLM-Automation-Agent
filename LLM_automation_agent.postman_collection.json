@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "22bbc7ea-77e7-45b6-9087-585b38d37592",
+		"name": "LLM_automation_agent",
+		"description": "Github project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45508455",
+		"_collection_link": "https://shriyam-3947885.postman.co/workspace/Shriyam-'s-Workspace~bd8bcdb9-1d00-47f9-859b-c2adce2c6574/collection/45508455-22bbc7ea-77e7-45b6-9087-585b38d37592?action=share&source=collection_link&creator=45508455"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://0.0.0.0:8000 ",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "8000 "
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Format Markdown Files",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Format the markdown file /data/format.md using prettier\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count Weekdays",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Count the number of Wednesdays in /data/dates.txt and write the count to /data/dates-wednesdays.txt\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sort JSON Data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Sort the contacts in /data/contacts.json by last_name and save the result to /data/contacts-sorted.json\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Extract Recent Logs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Extract the first line of the 10 most recent log files in /data/logs/ and save them to /data/logs-recent.txt\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Markdown Index",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Create an index of H1 titles from all markdown files in /data/docs/ and save it to /data/docs/index.json\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Extract Email Sender (LLM)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Read /data/email.txt, extract the sender's email address, and save it to /data/email-sender.txt\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Extract Credit Card Number (Vision)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Extract the credit card number from the image /data/credit-card.png and save it to /data/credit-card.txt\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Similar Comments",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Find similar comments in /data/comments.txt and save them to /data/comments-similar.txt\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test SQL Query (query_database)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Run query 'SELECT * FROM tickets' on database /data/ticket-sales.db and save the result to /data/ticket-sales-output.txt\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Install Dependencies & Generate Data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"task\": \"Install uv and run the data generation script for test@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/run",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"run"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

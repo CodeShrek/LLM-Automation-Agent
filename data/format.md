@@ -1,6 +1,12 @@
-# Project Header
+# Header
 
-This is a list:
+| Start | Mid | End |
+|:--|---|--:|
+| 1 | 2 | 3 |
 
-- item 1
-- item 2
+Paragraph has extra spaces and trailing whitespace.
+
+```py
+print("test@example.com")
+
+```

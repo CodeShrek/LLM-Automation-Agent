@@ -14,7 +14,7 @@ def secure_path(filename: str) -> Path:
     # 1. Convert to Path object for initial checks
     path_obj = Path(filename)
     
-    # 2. Check if it's a valid system absolute path (e.g., /Users/karan/...)
+    # 2. Check if it's a valid system absolute path
     if path_obj.is_absolute():
         try:
             resolved_path = path_obj.resolve()
@@ -22,19 +22,14 @@ def secure_path(filename: str) -> Path:
             if str(resolved_path).startswith(str(settings.DATA_DIR.resolve())):
                 return resolved_path
         except Exception:
-            # If resolving fails, ignore and treat as relative below
             pass
-        # Note: We do NOT raise an error here anymore. 
-        # If it was absolute but outside (like "/data/contacts.json"), we fall through
-        # and try treating it as relative.
+        # If absolute but invalid, fall through to treat as relative
 
     # 3. Normalize: Treat as relative path
     # Remove leading slashes to turn "/data/file" into "data/file"
     clean_name = str(filename).replace("\\", "/").lstrip("/")
     
     # 4. Handle "data/" duplication
-    # If the path is now "data/contacts.json", strip the "data/" prefix
-    # because we will join it with DATA_DIR later.
     if clean_name.startswith("data/"):
         clean_name = clean_name[5:] # Remove first 5 chars
     
@@ -42,7 +37,6 @@ def secure_path(filename: str) -> Path:
     full_path = (settings.DATA_DIR / clean_name).resolve()
     
     # 6. Final Security Check
-    # Ensure the resolved path is actually inside the allowed directory
     if not str(full_path).startswith(str(settings.DATA_DIR.resolve())):
         raise HTTPException(
             status_code=403, 
